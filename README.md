@@ -27,9 +27,6 @@ This behavior is usually linked to **hardware-level faults in the CH340 chip cir
 | 3 | Power jack        | Yes              | USB-B                 | Issue persists — same stuck behavior                            |
 | 4 | Power jack        | Planned test     | USB-B (data only)     | To test if removing USB power while keeping data solves issue   |
 
----
-
-## Additional Test Notes
 
 1. **USB-B used for both power and serial** (connected to a laptop): the board hangs and repeatedly outputs the same serial message.
 2. **USB-B used only for power** (connected to a wall adapter): same hanging behavior occurred.
