@@ -14,7 +14,7 @@ To diagnose this issue, the provided `main.cpp` sketch helps determine whether y
 
 To work around this issue, I used a USB-to-TTL serial adapter to directly connect to the board. This way, after uploading the program to the board using the USB-B port, I disconnected the USB-B cable and powered the board via the power jack. I then used the USB-to-TTL adapter to retrieve serial output without encountering the same hanging or reset behavior. To do this, make sure the USB-to-TTL adapter is wired correctly: connect the ground (GND) to the board’s GND, the TX of the adapter to the RX pin of the board (Pin 0), and the RX of the adapter to the TX pin of the board (Pin 1). It is also crucial to match the baud rate in your Serial Monitor with the one defined in the sketch — in this case, 9600 baud — otherwise, you may see garbage or no output at all.
 
-## ⚠️ Other Important Considerations
+## Other Important Considerations
 
 - When uploading code to the board, make sure the USB-to-TTL adapter is fully disconnected; otherwise, your IDE may not be able to establish a connection with the board.
 - When uploading a sketch, ensure the Serial Monitor is closed, as leaving it open can interfere with the upload process and cause it to fail.
