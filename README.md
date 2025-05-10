@@ -1,20 +1,82 @@
-# Arduino Uno Ch340 Diagnostic Tool
-This Arduino sketch helps diagnose serial communication failures, bootloader issues, or USB instability in CH340G-based Arduino Uno clones. It uses LED patterns and timestamped serial messages to reveal whether the board is executing properly, resetting unexpectedly, or stuck in a loop. Ideal for debugging boards with problematic USB-B ports.
-
 # Arduino Uno CH340 Diagnostic Tool
 
-For those working with an Arduino Uno CH340 (CH340G or CH340C) and experiencing issues where the C++ program hangs or becomes unresponsive a few seconds after running — especially after uploading code via the USB-B port — this issue appears to be hardware-related. Specifically, it is likely tied to the CH340G or CH340C chip on the board, which can cause the program to freeze or repeatedly execute the same line of code. The following scenarios have been tested to isolate the issue:
+This repository provides a diagnostic sketch to help identify **serial communication failures**, **bootloader instability**, or **USB-related execution issues** in Arduino Uno clones that use the **CH340G or CH340C USB-to-serial chips**. These issues often result in the board freezing, rebooting, or repeatedly executing a single line of code.
 
-- When the USB-B port was used for both power and serial communication (connected to a laptop), the program hung and stopped progressing after a few seconds.
-- When the USB-B port was used only as a power source (connected to a USB power adapter), the same issue occurred — the board froze after a few seconds and repeatedly output the same serial line.
-- When the board was powered using the power jack and the USB-B port was connected for serial communication, the issue persisted.
-- A future test scenario involves powering the board through the power jack while using the USB-B port solely for serial communication — by disconnecting the USB power line and keeping only the data lines and ground connected — to see if the issue still occurs.
+Ideal for diagnosing unstable boards with **problematic USB-B ports**, this tool uses a combination of LED patterns and timestamped serial output to visually and textually confirm whether your board is functioning normally.
 
-To diagnose this issue, the provided `main.cpp` sketch helps determine whether your board exhibits the same problem. The code blinks the onboard LED at preset intervals and prints the status of each iteration to the Serial Monitor. If the program hangs and the LED keeps blinking continuously while the same line is repeatedly printed to the serial output, you will see a warning message on the Serial Monitor. This behavior strongly indicates the presence of the CH340-related issue.
+---
 
-To work around this issue, I used a USB-to-TTL serial adapter to directly connect to the board. This way, after uploading the program to the board using the USB-B port, I disconnected the USB-B cable and powered the board via the power jack. I then used the USB-to-TTL adapter to retrieve serial output without encountering the same hanging or reset behavior. To do this, make sure the USB-to-TTL adapter is wired correctly: connect the ground (GND) to the board’s GND, the TX of the adapter to the RX pin of the board (Pin 0), and the RX of the adapter to the TX pin of the board (Pin 1). It is also crucial to match the baud rate in your Serial Monitor with the one defined in the sketch — in this case, 9600 baud — otherwise, you may see garbage or no output at all.
+## Problem Overview
+
+Many users working with **CH340G/CH340C-based Arduino Uno boards** encounter problems where the program:
+
+- Freezes a few seconds after upload
+- Repeats the same output in the serial monitor
+- Shows continuous LED blinking but no functional loop progression
+
+This behavior is usually linked to **hardware-level faults in the CH340 chip circuitry**, especially how it handles power or serial line interference.
+
+---
+
+## Tested Scenarios
+
+| # | Power Source      | USB-B Connected | Serial Output Method | Result                                                           |
+|---|-------------------|------------------|-----------------------|------------------------------------------------------------------|
+| 1 | USB-B (laptop)    | Yes              | USB-B                 | Program hangs and repeatedly prints the same line               |
+| 2 | USB-B (adapter)   | Yes (power only) | None                  | Same issue — board freezes after a few seconds                  |
+| 3 | Power jack        | Yes              | USB-B                 | Issue persists — same stuck behavior                            |
+| 4 | Power jack        | Planned test     | USB-B (data only)     | To test if removing USB power while keeping data solves issue   |
+
+---
+
+## Additional Test Notes
+
+1. **USB-B used for both power and serial** (connected to a laptop): the board hangs and repeatedly outputs the same serial message.
+2. **USB-B used only for power** (connected to a wall adapter): same hanging behavior occurred.
+3. **Board powered via the DC jack** while USB-B was connected for serial: issue persisted.
+4. **(Planned)**: Power via the DC jack and use USB-B *only for data* (disconnect 5V line) — to isolate whether the USB power line causes the fault.
+
+---
+
+## Diagnostic Method
+
+Use the provided `main.cpp` sketch to test your board:
+
+- Blinks the onboard LED at set intervals
+- Prints each loop iteration with a millisecond timestamp
+- Detects and warns if the loop is running too fast (indicating a reset or stuck loop)
+
+If you observe the LED blinking in a fixed pattern while the same serial line is printed repeatedly — along with a **"WARNING: Loop running too fast - possible reset/stuck?"** message — your board is likely affected by the CH340-related issue.
+
+---
+
+## Workaround Using USB-to-TTL Adapter
+
+To bypass the problematic CH340 chip, follow this workaround:
+
+1. Upload the program normally via the USB-B port.
+2. Disconnect the USB-B cable.
+3. Power the board through the **power jack** (recommended).
+4. Connect a **USB-to-TTL adapter** for serial output.
+
+### Wiring Guide
+
+| TTL Adapter Pin | Arduino Uno Pin |
+|-----------------|-----------------|
+| GND             | GND             |
+| TX              | RX (Pin 0)      |
+| RX              | TX (Pin 1)      |
+
+- **Set the baud rate to `9600`** in the Serial Monitor (matches the sketch).
+- Ensure your TTL adapter uses **5V logic** (not 3.3V) for safe compatibility.
+
+---
 
 ## Other Important Considerations
 
-- When uploading code to the board, make sure the USB-to-TTL adapter is fully disconnected; otherwise, your IDE may not be able to establish a connection with the board.
-- When uploading a sketch, ensure the Serial Monitor is closed, as leaving it open can interfere with the upload process and cause it to fail.
+- **Disconnect the USB-to-TTL adapter** when uploading code — otherwise, your IDE may not connect to the board.
+- **Close the Serial Monitor** before uploading a sketch — having it open can block the upload process and cause failures.
+
+---
+
+This tool is a lightweight and practical way to identify CH340-related board instability and serves as a quick validation for hardware troubleshooting.
