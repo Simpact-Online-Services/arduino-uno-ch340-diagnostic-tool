@@ -65,7 +65,6 @@ To bypass the problematic CH340 chip, follow this workaround:
 | RX              | TX (Pin 1)      |
 
 - **Set the baud rate to `9600`** in the Serial Monitor (matches the sketch).
-- Ensure your TTL adapter uses **5V logic** (not 3.3V) for safe compatibility.
 
 ---
 
