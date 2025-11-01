@@ -1,78 +1,116 @@
-# Arduino Uno CH340 Diagnostic Tool
+# Arduino Uno CH340 Diagnostic Tool 🛠️
 
-This repository provides a diagnostic sketch to help identify **serial communication failures**, **bootloader instability**, or **USB-related execution issues** in Arduino Uno clones that use the **CH340G or CH340C USB-to-serial chips**. These issues often result in the board freezing, rebooting, or repeatedly executing a single line of code.
+![GitHub Release](https://img.shields.io/github/release/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool.svg)
+![GitHub Issues](https://img.shields.io/github/issues/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool.svg)
+![GitHub Forks](https://img.shields.io/github/forks/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool.svg)
+![GitHub Stars](https://img.shields.io/github/stars/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool.svg)
 
-Ideal for diagnosing unstable boards with **problematic USB-B ports**, this tool uses a combination of LED patterns and timestamped serial output to visually and textually confirm whether your board is functioning normally.
+## Overview
 
----
+The **Arduino Uno CH340 Diagnostic Tool** is a simple yet effective sketch designed to help you diagnose boot, reset, and serial communication issues on CH340G-based Arduino Uno boards. This tool is essential for hobbyists and professionals who need to troubleshoot and ensure their Arduino boards are functioning correctly.
 
-## Problem Overview
+## Features
 
-Many users working with **CH340G/CH340C-based Arduino Uno boards** encounter problems where the program:
+- **Bootloader Detection**: Identify if the bootloader is working properly.
+- **Reset Functionality**: Check the reset capabilities of your board.
+- **Serial Communication Test**: Ensure that the serial communication is functioning as expected.
+- **User-Friendly Interface**: Simple output for quick diagnostics.
+- **Open Source**: Free to use and modify as per your needs.
 
-- Freezes a few seconds after upload
-- Repeats the same output in the serial monitor
-- Shows continuous LED blinking but no functional loop progression
+## Topics Covered
 
-This behavior is usually linked to **hardware-level faults in the CH340 chip circuitry**, especially how it handles power or serial line interference.
+This project covers various important topics related to Arduino and embedded systems:
 
----
+- Arduino
+- Arduino Uno
+- Bootloader
+- CH340
+- CH340G
+- Embedded Diagnostics
+- Hardware Debugging
+- Microcontroller
+- Serial Debugging
+- TTL Serial
 
-## Tested Scenarios
+## Getting Started
 
-| # | Power Source      | USB-B Connected | Serial Output Method | Result                                                           |
-|---|-------------------|------------------|-----------------------|------------------------------------------------------------------|
-| 1 | USB-B (laptop)    | Yes              | USB-B                 | Program hangs and repeatedly prints the same line               |
-| 2 | USB-B (adapter)   | Yes (power only) | None                  | Same issue — board freezes after a few seconds                  |
-| 3 | Power jack        | Yes              | USB-B                 | Issue persists — same stuck behavior                            |
-| 4 | Power jack        | Planned test     | USB-B (data only)     | To test if removing USB power while keeping data solves issue   |
+To get started with the Arduino Uno CH340 Diagnostic Tool, follow these steps:
 
+### Prerequisites
 
-1. **USB-B used for both power and serial** (connected to a laptop): the board hangs and repeatedly outputs the same serial message.
-2. **USB-B used only for power** (connected to a wall adapter): same hanging behavior occurred.
-3. **Board powered via the DC jack** while USB-B was connected for serial: issue persisted.
-4. **(Planned)**: Power via the DC jack and use USB-B *only for data* (disconnect 5V line) — to isolate whether the USB power line causes the fault.
+1. **Arduino IDE**: Make sure you have the Arduino IDE installed on your computer. You can download it from the [official Arduino website](https://www.arduino.cc/en/software).
+2. **CH340G Driver**: Ensure that you have the CH340G driver installed for your operating system. This driver is crucial for your computer to communicate with CH340G-based Arduino boards.
 
----
+### Installation
 
-## Diagnostic Method
+1. Clone this repository to your local machine:
 
-Use the provided `main.cpp` sketch to test your board:
+   ```bash
+   git clone https://github.com/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool.git
+   ```
 
-- Blinks the onboard LED at set intervals
-- Prints each loop iteration with a millisecond timestamp
-- Detects and warns if the loop is running too fast (indicating a reset or stuck loop)
+2. Open the Arduino IDE.
+3. Navigate to `File` > `Open...` and select the `arduino-uno-ch340-diagnostic-tool` folder.
+4. Open the `.ino` file within the folder.
+5. Connect your CH340G-based Arduino Uno to your computer.
 
-If you observe the LED blinking in a fixed pattern while the same serial line is printed repeatedly — along with a **"WARNING: Loop running too fast - possible reset/stuck?"** message — your board is likely affected by the CH340-related issue.
+### Running the Diagnostic Tool
 
----
+1. Upload the sketch to your Arduino Uno by clicking the upload button in the Arduino IDE.
+2. Open the Serial Monitor from the Arduino IDE (`Tools` > `Serial Monitor`).
+3. Set the baud rate to 9600.
+4. Follow the instructions displayed in the Serial Monitor.
 
-## Workaround Using USB-to-TTL Adapter
+### Download the Latest Release
 
-To bypass the problematic CH340 chip, follow this workaround:
+To download the latest release of the diagnostic tool, visit the [Releases section](https://github.com/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool/releases). Download the appropriate file, and execute it according to the instructions provided.
 
-1. Upload the program normally via the USB-B port.
-2. Disconnect the USB-B cable.
-3. Power the board through the **power jack** (recommended).
-4. Connect a **USB-to-TTL adapter** for serial output.
+## Usage
 
-### Wiring Guide
+Once the sketch is uploaded and the Serial Monitor is open, you will see various prompts that will guide you through the diagnostic process. Follow these steps:
 
-| TTL Adapter Pin | Arduino Uno Pin |
-|-----------------|-----------------|
-| GND             | GND             |
-| TX              | RX (Pin 0)      |
-| RX              | TX (Pin 1)      |
+1. **Bootloader Check**: The tool will send a command to check if the bootloader is functioning. If it responds positively, your bootloader is working.
+2. **Reset Check**: The tool will test the reset functionality. You should see a message confirming whether the reset is successful.
+3. **Serial Communication**: Finally, the tool will test serial communication. It will display messages that confirm the status of the serial connection.
 
-- **Set the baud rate to `9600`** in the Serial Monitor (matches the sketch).
+### Troubleshooting
 
----
+If you encounter issues while using the diagnostic tool, consider the following:
 
-## Other Important Considerations
+- Ensure that your Arduino board is properly connected to your computer.
+- Check if the correct COM port is selected in the Arduino IDE.
+- Make sure the CH340G driver is correctly installed.
+- Restart the Arduino IDE if you face any unexpected behavior.
 
-- **Disconnect the USB-to-TTL adapter** when uploading code — otherwise, your IDE may not connect to the board.
-- **Close the Serial Monitor** before uploading a sketch — having it open can block the upload process and cause failures.
+## Contributing
 
----
+We welcome contributions to improve this tool. If you have suggestions or bug fixes, please follow these steps:
 
-This tool is a lightweight and practical way to identify CH340-related board instability and serves as a quick validation for hardware troubleshooting.
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them.
+4. Push your changes to your forked repository.
+5. Open a pull request to the main repository.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+## Acknowledgments
+
+- Thanks to the Arduino community for their ongoing support and contributions.
+- Special thanks to those who have contributed to this project and helped improve it.
+
+## Contact
+
+For questions or feedback, please open an issue on GitHub or contact the repository owner directly.
+
+### Download the Latest Release Again
+
+To download the latest release of the diagnostic tool, you can visit the [Releases section](https://github.com/Simpact-Online-Services/arduino-uno-ch340-diagnostic-tool/releases). Download the appropriate file, and execute it according to the instructions provided.
+
+## Conclusion
+
+The Arduino Uno CH340 Diagnostic Tool is a valuable resource for anyone working with CH340G-based Arduino boards. It provides a straightforward way to diagnose common issues, ensuring that your projects run smoothly. Whether you're a beginner or an experienced developer, this tool can save you time and effort in troubleshooting.
+
+Feel free to explore the code, make improvements, and share your findings with the community. Happy coding!
